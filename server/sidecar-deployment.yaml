@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: image-regco-deployment
+spec:
+  selector:
+    matchLabels:
+      app: image-regco
+  template:
+    metadata:
+      labels:
+        app: image-regco
+    spec:
+      containers:
+      - name: main-app
+        image: main-app
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+        - name: image-storage
+          mountPath: /app/images/
+
+      - name: sidecar-app
+        image: image-crawler
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 12345
+        volumeMounts:
+        - name: image-storage
+          mountPath: /app/image_storage/
+
+      volumes:
+      - name: image-storage
+        emptyDir: {}

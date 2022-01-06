@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crawler-deployment
+spec:
+  selector:
+    matchLabels:
+      app: crawler
+  template:
+    metadata:
+      labels:
+        app: crawler
+    spec:
+      containers:
+      - name: crawler
+        image: image-crawler
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 12345
+        volumeMounts:
+        - name: image-storage
+          mountPath: /image_storage/
+      volumes:
+      - name: image-storage
+        emptyDir: {}
